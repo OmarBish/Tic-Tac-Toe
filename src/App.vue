@@ -1,17 +1,23 @@
 <template>
   <div>
     <div class="scoreBoard">
-      <span>O has {{ wins.O }} wins</span>
-      <h2>Score Board</h2>
-      <span>X has {{ wins.X }} wins</span>
+      <span>(O) has {{ wins.O }} wins</span>
+      <span>(X) has {{ wins.X }} wins</span>
     </div>
-    <div id="app">
-      <div id="details">
-        <h1>Tic Tac Toe</h1>
-        <h2>Match #{{ matches + 1 }}</h2>
+    <div class="container-fluid">
+      <div class="row ">
+        <div class="col text-center">
+          <h1>Tic Tac Toe</h1>
+          <h2>Match #{{ matches + 1 }}</h2>
+        </div>
       </div>
-      <grid></grid>
-      <button class="restart" @click="restart">Restart</button>
+      <div class="row text-center">
+        <div class="col text-center" id="app">
+          <grid class="mx-auto"></grid>
+          <button class="restart wm-270" @click="restart">Restart</button>
+        </div>
+        
+      </div>
     </div>
   </div>
 </template>
@@ -50,7 +56,7 @@ export default {
 
 <style>
 body {
-  background-color: #fff;
+  background-color: #141311;
   color: #fff;
   font-family: 'Dosis', Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -60,9 +66,7 @@ body {
 }
 
 #app {
-  margin: 0 auto;
-  max-width: 270px;
-  color: #34495e;
+  color: #fff;
 }
 
 h1 {
@@ -97,7 +101,7 @@ h1 {
   align-items: center;
   width: 100%;
   height: 15px;
-  background-color: #16a085;
+  background-color: #a2482e;
   box-shadow: 10px solid #fff;
   padding: 20px;
   overflow-x: none;
@@ -112,5 +116,8 @@ h1 {
   font-size: 1.5em;
   font-weight: bold;
   margin-left: 20px;
+}
+.wm-270{
+  max-width: 270px;
 }
 </style>
