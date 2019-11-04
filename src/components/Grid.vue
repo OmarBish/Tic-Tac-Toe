@@ -28,7 +28,8 @@ import Cell from './Cell.vue'
 import {TreeNode} from '../DS/Tree';
 
 export default {
-	components: { Cell },
+  components: { Cell },
+  props:['maxLevel','alg'],
   data () {
     return {
     	// can be O or X
@@ -57,7 +58,6 @@ export default {
 			[1, 4, 7], [2, 5, 8],	[3, 6, 9], // columns
 			[1, 5, 9], [3, 5, 7]             // diagonals
 		],
-		maxLevel:4
     }
   },
 
@@ -152,6 +152,7 @@ export default {
 				}
 				// debugger
 				let tempNode = new TreeNode(nodeData)
+				this.$parent.numberOfNodes += 1
 				node.descendents.push(tempNode)
 			}
 		}
@@ -169,56 +170,79 @@ export default {
 		}
 	  },
 	  //build state space for min/max Alg
-	  buildStateSpace(rootNode,level){
-			if(level>this.maxLevel) return;
+	  buildStateSpace(rootNode){
+			if(rootNode.value.level>this.maxLevel) return;
+			
 			this.buildNextLevel(rootNode);
 			for(let i = 0 ; i < rootNode.descendents.length;i++){
-				this.buildStateSpace(rootNode.descendents[i],level+1)
+				this.buildStateSpace(rootNode.descendents[i])
 			}
 			return rootNode;
 	  },
-	  findBestMove(node){
+	  findBestMove(node,alpha,beta){
 			if(node.descendents.length == 0){
 				return [node.calcHeuristic(),0];
 			}
-			
 			let index;
+			node.beta = beta
+			node.alpha = alpha
 		for(let i = 0 ; i < node.descendents.length;i++){
-			let heuristic = this.findBestMove(node.descendents[i])
+			this.$parent.numberOfComputedNodes += 1;
+			let heuristic = this.findBestMove(node.descendents[i],node.alpha,node.beta)
 			// even level -> max 
 			// odd level -> min
-	
+			
 			if(node.value.level % 2){
 				if(node.heuristic == null){
 					node.heuristic = heuristic[0]
 					index = i
+					node.beta = heuristic[0]
 				}else if(node.heuristic>heuristic[0]){
 					node.heuristic = heuristic[0]
 					index = i
+					if(this.alg == "AlphaBeta" && heuristic[0] < node.beta ){
+						node.beta = heuristic[0]
+					}
 				}
 			}else{
 				if(node.heuristic == null){
 					node.heuristic = heuristic[0]
 					index = i
+					node.alpha = heuristic[0]
 				}else if(node.heuristic<heuristic[0]){
 					node.heuristic = heuristic[0]
 					index = i
+					if(this.alg == "AlphaBeta" && heuristic[0] > node.alpha ){
+						node.alpha = heuristic[0]
+					}
 				}
 			}
+			if(this.alg=="AlphaBeta"){
+			  if(node.value.level % 2){
+				 if(node.heuristic < node.alpha){
+					 break;
+				 }
+			  }else{
+ 				if(node.heuristic > node.beta){
+					 break;
+				 }
+			  }
+		  	}
 		}
 		return [node.heuristic,index]
-		
-
 	  },
 	  findNextMove(){
 		  const rootData = {
 			  	cells:Object.assign({},this.cells),
 				level:0,
 			}
+			this.$parent.numberOfNodes = 0
 			let rootNode = new TreeNode(rootData)
-		  	this.buildStateSpace(rootNode,0)
+			this.$parent.numberOfNodes += 1
+		  	this.buildStateSpace(rootNode)
 			console.log('rootNode',rootNode);
-			let bestMove = this.findBestMove(rootNode)[1];
+			this.$parent.numberOfComputedNodes = 0;
+			let bestMove = this.findBestMove(rootNode,-10,10)[1];
 			console.log("bestMove",bestMove)
 			let change= null;
 			for(let i = 1 ; i <= 9;i++){

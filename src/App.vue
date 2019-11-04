@@ -1,8 +1,17 @@
 <template>
   <div>
-    <div class="scoreBoard">
-      <span>(O) has {{ wins.O }} wins</span>
-      <span>(X) has {{ wins.X }} wins</span>
+    <div class="row scoreBoard" >
+      <div class="col">(O) has {{ wins.O }} wins</div>
+      <div class="col" >
+          <label for="sel1">Select Level:</label>
+          <select class="form-control" id="sel1" v-model="level">
+              <option value="0">Easy</option>
+              <option value="1">Medium</option>
+              <option value="2">Hard</option>
+              <option value="3">UnBeatable</option>
+          </select>
+        </div> 
+      <div class="col">(X) has {{ wins.X }} wins</div>
     </div>
     <div class="container-fluid">
       <div class="row ">
@@ -12,11 +21,24 @@
         </div>
       </div>
       <div class="row text-center">
-        <div class="col text-center" id="app">
-          <grid class="mx-auto"></grid>
+        <div class="col-md-8 col-sm-12 mb-2 text-center" id="app">
+          <grid :alg="alg" :maxLevel="level" class="mx-auto"></grid>
           <button class="restart wm-270" @click="restart">Restart</button>
         </div>
-        
+        <div class="col-md-4 col-sm-12 text-center" id="app">
+          <h1>Information</h1>
+          <h3>number of space nodes</h3> 
+          <h5>{{numberOfNodes}}</h5>
+          <h3>number of iterations</h3> 
+          <h5>{{numberOfComputedNodes}}</h5>
+           <div class="form-group">
+              <h3 for="sel1">Selected algorithm:</h3>
+              <select class="form-control" id="sel1" v-model="alg">
+                <option value="MinMax">MinMax</option>
+                <option value="AlphaBeta">AlphaBeta</option>
+              </select>
+            </div> 
+        </div>
       </div>
     </div>
   </div>
@@ -34,7 +56,11 @@ export default {
       wins: {
         O: 0,
         X: 0
-      }
+      },
+      level:1,
+      alg:"MinMax",
+      numberOfNodes:0,
+      numberOfComputedNodes :0
     }
   },
 
@@ -95,12 +121,7 @@ h1 {
 }
 
 .scoreBoard {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
   align-items: center;
-  width: 100%;
-  height: 15px;
   background-color: #a2482e;
   box-shadow: 10px solid #fff;
   padding: 20px;
@@ -111,13 +132,15 @@ h1 {
   margin: 0px;
 }
 
-.scoreBoard span {
-  float: right;
+.scoreBoard div {
   font-size: 1.5em;
   font-weight: bold;
   margin-left: 20px;
 }
 .wm-270{
   max-width: 270px;
+}
+#sel1{
+  height: 30px;
 }
 </style>
