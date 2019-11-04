@@ -140,7 +140,5 @@ h1 {
 .wm-270{
   max-width: 270px;
 }
-#sel1{
-  height: 30px;
-}
+  
 </style>
