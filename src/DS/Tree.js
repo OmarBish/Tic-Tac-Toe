@@ -7,7 +7,8 @@ export class TreeNode {
     constructor(value) {
         this.value = value;
         this.descendents = [];
-        this.heuristic = null
+		this.heuristic = null
+		
     }
     calcHeuristic(){
             let xWins=0
@@ -29,19 +30,28 @@ export class TreeNode {
 				}
 				if(oCount > 0 && xCount == 0){
 					oWins++
-					if(oCount == 3 )oWins++
+					if(oCount == 2 ){
+						oWins+=10
+					}
+					if(oCount == 3 ){
+						oWins+=100
+					}
 				}
 				if(xCount > 0 && oCount == 0){
 					xWins++
-					if(xCount == 3) xWins++
+					if(xWins == 2 ){
+						xWins+=10
+					}
+					if(xWins == 3 ){
+						xWins+=100
+					}
 				}
 				if(oCount == 0 && xCount == 0){
 					oWins++
 					xWins++
 				}
-				// console.log("oWins",oWins)
-				// console.log("xWins",xWins)
-          });
+		  });
+		  
           this.heuristic = xWins-oWins
 		  return xWins-oWins ;
     }
